@@ -25,7 +25,7 @@ class Read extends Component {
           .filter(book => {
             return book.shelf === "read";
           });
-        // console.log(arr);
+        console.log(arr);
         this.setState(() => ({
           ...this.state,
           read: arr
