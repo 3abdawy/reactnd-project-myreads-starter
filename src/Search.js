@@ -6,7 +6,7 @@ import Book from "./Components/Book";
 class Search extends Component {
   state = {
     query: "",
-    books: null,
+    searchedBooks: null,
     err: null
   };
 
@@ -19,10 +19,10 @@ class Search extends Component {
         .then(data => {
           console.log(data);
           if (Array.isArray(data)) {
-            this.setState({ books: data });
+            this.setState({ searchedBooks: data });
           }else {
             this.setState({
-              books: null,
+              searchedBooks: null,
               err:"Error"
             });
           }
@@ -49,14 +49,14 @@ class Search extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {this.state.books ? (
-              this.state.books.map(book => {
+            {this.state.searchedBooks ? (
+              this.state.searchedBooks.map(searchedBook => {
                 return (
                   <Book
-                    key={book.id}
-                    title={book.title}
-                    authors={book.authors}
-                    img={book.imageLinks.thumbnail}
+                    key={searchedBook.id}
+                    title={searchedBook.title}
+                    authors={searchedBook.authors}
+                    img={searchedBook.imageLinks.thumbnail}
                   />
                 );
               })

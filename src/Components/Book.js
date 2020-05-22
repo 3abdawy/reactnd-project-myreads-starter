@@ -2,48 +2,16 @@ import React, { Component } from "react";
 
 class Book extends Component {
   state = {
-    selectRef: React.createRef()
+  
   };
 
-  componentDidMount() {
-    if (this.props.optionSelect) {
-      switch (this.props.optionSelect) {
-        case "currentlyReading":
-          {
-            this.state.selectRef.current.childNodes[1].setAttribute(
-              "selected",
-              "true"
-            );
-          }
-          break;
-        case "wantToRead":
-          {
-            this.state.selectRef.current.childNodes[2].setAttribute(
-              "selected",
-              "true"
-            );
-          }
-          break;
-        case "read":
-          {
-            this.state.selectRef.current.childNodes[3].setAttribute(
-              "selected",
-              "true"
-            );
-          }
-          break;
-        default: {
-          this.state.selectRef.current.childNodes[4].setAttribute(
-            "selected",
-            "true"
-          );
-        }
-      }
-    }
-  }
-
+ 
   render() {
+    const searchedBooks = this.props.searchedBooks;
+
     return (
+      <div>
+        {
       <li>
         <div className="book">
           <div className="book-top">
@@ -56,7 +24,7 @@ class Book extends Component {
               }}
             ></div>
             <div className="book-shelf-changer">
-              <select ref={this.state.selectRef}>
+              <select value={this.props.optionSelect} onChange={(e)=>this.props.changeShelf(this,e.target.value)}>
                 <option value="move" disabled>
                   Move to...
                 </option>
@@ -71,6 +39,9 @@ class Book extends Component {
           <div className="book-authors">{this.props.authors}</div>
         </div>
       </li>
+      }
+      </div>
+            
     );
   }
 }
