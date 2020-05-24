@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import * as BooksApi from "./BooksAPI";
-import Book from "./Components/Book";
+import * as BooksApi from "../BooksAPI";
+import SearchedBook from "../Components/SearchedBook";
 
 class Search extends Component {
   state = {
@@ -11,27 +11,36 @@ class Search extends Component {
   };
 
   inputHandler = e => {
-    console.log(e.target.value);
     this.setState({ query: e.target.value });
-    if (this.state.query !== "" ) {
+    if (this.state.query !== "") {
       BooksApi.search(this.state.query)
         .then(res => res)
         .then(data => {
-          console.log(data);
           if (Array.isArray(data)) {
             this.setState({ searchedBooks: data });
-          }else {
+          } else {
+            console.log(data);
             this.setState({
               searchedBooks: null,
-              err:"Error"
+              err: "Error"
             });
           }
-        })
+        });
     }
   };
 
-  componentDidMount() {}
   render() {
+    const updatedSearchBooks = this.state.searchedBooks
+      ? this.state.searchedBooks.map(searchBook => {
+          this.props.allBooks.map(b => {
+            if (searchBook.id === b.id) {
+              searchBook.shelf = b.shelf;
+            }
+            return b;
+          });
+          return searchBook;
+        })
+      : null;
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -49,14 +58,18 @@ class Search extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {this.state.searchedBooks ? (
-              this.state.searchedBooks.map(searchedBook => {
+            {updatedSearchBooks && updatedSearchBooks.length > 1 ? (
+              updatedSearchBooks.map(searchedBook => {
                 return (
-                  <Book
+                  <SearchedBook
                     key={searchedBook.id}
                     title={searchedBook.title}
                     authors={searchedBook.authors}
                     img={searchedBook.imageLinks.thumbnail}
+                    id={searchedBook.id}
+                    optionSelect={
+                      searchedBook.shelf ? searchedBook.shelf : "none"
+                    }
                   />
                 );
               })

@@ -1,21 +1,20 @@
 import React from "react";
-// import * as BooksAPI from './BooksAPI'
 import { Route } from "react-router-dom";
 import "./App.css";
-import Search from "./Search";
+import Search from "./Containers/Search";
 import * as BooksApi from "./BooksAPI";
-import Shelves from "./Shelves";
+import Shelves from "./Containers/Shelves";
 
 class BooksApp extends React.Component {
   state = {
     books: []
   };
+
   componentDidMount() {
     BooksApi.getAll()
       .then(res => res)
       .then(data => {
-        this.setState({ books: data });
-        console.log(this.state.books);
+        this.setState({ books: data});
       });
   }
 
@@ -23,26 +22,26 @@ class BooksApp extends React.Component {
     this.setState({
       books: this.state.books.map(b => {
         if (b.id === book.id) {
-           b.shelf = shelf
-           return b;
+          b.shelf = shelf;
+          return b;
         } else {
           return b;
         }
       })
     });
-    console.log(this.state.books);
+    BooksApi.update(book, shelf);
   };
+
   render() {
     return (
       <div className="app">
-        <Route path="/search" component={Search} />
+        <Route path="/search" render={() => <Search allBooks = {this.state.books} />} />
         {this.state.books.length > 0 ? (
           <Route
             exact
             path="/"
-            render={props => (
+            render={() => (
               <Shelves
-                {...props}
                 changeShelf={this.changeShelf}
                 allBooks={this.state.books}
               />
