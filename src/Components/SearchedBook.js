@@ -2,12 +2,20 @@ import React, { Component } from "react";
 import * as BooksApi from "../BooksAPI";
 
 class Book extends Component {
+  state = {
+    change : false
+  }
   updateShelf = (book, shelf) => {
     const newBook = { id: book.props.id };
     BooksApi.update(newBook, shelf).then(res => {
       console.log(res);
       return res;
     });
+    this.setState((prevState) => ({
+      change : true,
+      newSelection: shelf
+    }))
+    console.log("pressed")
   };
 
   render() {
@@ -27,7 +35,7 @@ class Book extends Component {
                 ></div>
                 <div className="book-shelf-changer">
                   <select
-                    value={this.props.optionSelect}
+                    value={this.props.optionSelect !== "none" ? this.props.optionSelect : (this.state.change === false ? "none" : this.state.newSelection)}
                     onChange={e => this.updateShelf(this, e.target.value)}
                   >
                     <option value="move" disabled>
