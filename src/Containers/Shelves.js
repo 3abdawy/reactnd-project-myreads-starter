@@ -3,10 +3,8 @@ import Shelf from "../Components/Shelf";
 import { Link } from "react-router-dom";
 
 class Shelves extends Component {
-  
   render() {
     const allBooks = this.props.allBooks;
-    console.log(allBooks)
     const currentlyReading = allBooks.filter(
       b => b.shelf === "currentlyReading"
     );

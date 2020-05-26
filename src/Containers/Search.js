@@ -7,31 +7,13 @@ class Search extends Component {
   state = {
     query: "",
     searchedBooks: null,
-    err: null
-  };
-
-  inputHandler = e => {
-    this.setState({ query: e.target.value });
-    if (this.state.query !== "") {
-      BooksApi.search(this.state.query)
-        .then(res => res)
-        .then(data => {
-          if (Array.isArray(data)) {
-            this.setState({ searchedBooks: data });
-          } else {
-            console.log(data);
-            this.setState({
-              searchedBooks: null,
-              err: "Error"
-            });
-          }
-        });
-    }
+    err: null,
+    updatedSearchBooks: []
   };
 
   render() {
-    const updatedSearchBooks = this.state.searchedBooks
-      ? this.state.searchedBooks.map(searchBook => {
+    let updatedSearchBooks = this.props.searchedBooks && this.props.query
+      ? this.props.searchedBooks.map(searchBook => {
           this.props.allBooks.map(b => {
             if (searchBook.id === b.id) {
               searchBook.shelf = b.shelf;
@@ -51,8 +33,8 @@ class Search extends Component {
             <input
               type="text"
               placeholder="Search by title or author"
-              onChange={this.inputHandler}
-              value={this.state.query}
+              onChange={this.props.inputHandler}
+              value={this.props.query}
             />
           </div>
         </div>
@@ -62,11 +44,14 @@ class Search extends Component {
               updatedSearchBooks.map(searchedBook => {
                 return (
                   <SearchedBook
+                    book={searchedBook}
+                    updateShelf={this.props.updateShelf}
                     key={searchedBook.id}
                     title={searchedBook.title}
                     authors={searchedBook.authors}
-                    img={searchedBook.imageLinks.thumbnail}
+                    img={searchedBook.imageLinks ? searchedBook.imageLinks.thumbnail:null}
                     id={searchedBook.id}
+                    shelf={this.props.shelf}
                     optionSelect={
                       searchedBook.shelf ? searchedBook.shelf : "none"
                     }
